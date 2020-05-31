@@ -1,0 +1,71 @@
+* zybo usage
+** uart
+   #+BEGIN_SRC C
+
+#include <stdio.h>
+#include "platform.h"
+#include "xil_printf.h"
+#include "xparameters.h"
+#include "xuartps.h"
+
+#define UART_DEVICE_ID                  XPAR_XUARTPS_0_DEVICE_ID
+
+int UartPsHelloWorldExample(u16 DeviceId);
+
+XUartPs Uart_Ps; /* The instance of the UART Driver */
+
+void myDelay() {
+	int i = 0;
+	while (i++ < 20000000)
+		;
+}
+
+int main() {
+	int Status;
+	init_platform();
+	Status = UartPsHelloWorldExample(UART_DEVICE_ID);
+
+	if (Status == XST_FAILURE) {
+		xil_printf("Uartps hello world Example Failed\r\n");
+		return XST_FAILURE;
+	}
+	while (1) {
+		xil_printf("Successfully ran Uartps hello world Example\r\n");
+		myDelay();
+	}
+
+	cleanup_platform();
+	return 0;
+}
+
+int UartPsHelloWorldExample(u16 DeviceId) {
+	u8 HelloWorld[] = "Hello Zybo.....!!Hello World";
+	int SentCount = 0;
+	int Status;
+	XUartPs_Config *Config;
+
+	/*
+	 * Initialize the UART driver so that it's ready to use
+	 * Look up the configuration in the config table and then initialize it.
+	 */
+	Config = XUartPs_LookupConfig(DeviceId);
+	if (NULL == Config) {
+		return XST_FAILURE;
+	}
+
+	Status = XUartPs_CfgInitialize(&Uart_Ps, Config, Config->BaseAddress);
+	if (Status != XST_SUCCESS) {
+		return XST_FAILURE;
+	}
+
+	XUartPs_SetBaudRate(&Uart_Ps, 115200);
+
+	while (SentCount < (sizeof(HelloWorld) - 1)) {
+		/* Transmit the data */
+		SentCount += XUartPs_Send(&Uart_Ps, &HelloWorld[SentCount], 1);
+	}
+
+	return SentCount;
+}
+
+   #+END_SRC
