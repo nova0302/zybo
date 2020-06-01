@@ -1,6 +1,48 @@
 * zybo usage
-** uart
-   #+BEGIN_SRC C
+  - Ports using MIO shouldn't be in XDC
+  
+** gpio
+
+
+** I2C0
+   - MIO_14 scl, B6, JE9
+   - MIO_15 sda, E6, JE10
+   
+#+BEGIN_SRC C
+/*
+*
+*/
+#+END_SRC
+
+
+** I2C1
+   - MIO_12 scl, C5, JE4
+   - MIO_13 sda, A6, JE1
+#+BEGIN_SRC C
+/*
+*/
+#+END_SRC
+
+
+** uart1
+   - UART1 MIO_48 rx
+   -       MIO_49 tx 
+#+BEGIN_SRC C
+/*
+*/
+#+END_SRC
+
+
+
+** uart0
+   - UART0 MIO_10 rx, G7, JE2
+   - MIO_11 tx, B4, JE3
+
+#+BEGIN_SRC C
+
+/*
+*
+*/
 
 #include <stdio.h>
 #include "platform.h"
@@ -68,4 +110,4 @@ int UartPsHelloWorldExample(u16 DeviceId) {
 	return SentCount;
 }
 
-   #+END_SRC
+#+END_SRC
